@@ -14,7 +14,7 @@
 
 package main
 
-import "lambda-monitor/cmd"
+import "github.com/pedrolopesme/lambda-monitor/cmd"
 
 func main() {
 	cmd.Execute()

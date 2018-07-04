@@ -15,12 +15,12 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
+	"github.com/pedrolopesme/lambda-monitor/core"
 )
 
 // lsCmd represents the ls command
+// TODO implementation
 var lsCmd = &cobra.Command{
 	Use:   "ls",
 	Short: "A brief description of your command",
@@ -31,7 +31,7 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("ls called")
+		core.PrintLambdas()
 	},
 }
 

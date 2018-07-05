@@ -42,14 +42,15 @@ func listFunctions(client lambdaiface.LambdaAPI) (lambdas []Lambda, err error) {
 	return
 }
 
+type LambdaList struct {}
+
 // Process list the lambdas associated to an
 // AWS account and print them
 // TODO refactor and add tests
-func Process() (err error) {
+func (l LambdaList) Print() error {
 	sess, err := session.NewSession()
 	if err != nil {
-		fmt.Println("It was impossible to create AWS session due to", err)
-		return
+		return ErrCannotCreateSession
 	}
 
 	client := client.NewLambdaClient(lambda.New(sess))
@@ -59,5 +60,9 @@ func Process() (err error) {
 	}
 
 	printLambdas(lambdas)
-	return
+	return nil
+}
+
+func NewList() LambdaList {
+	return LambdaList{}
 }

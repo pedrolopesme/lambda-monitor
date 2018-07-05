@@ -42,15 +42,37 @@ func listFunctions(client lambdaiface.LambdaAPI) (lambdas []Lambda, err error) {
 	return
 }
 
-type LambdaList struct {}
+type LambdaList struct {
+	lambdas []Lambda
+}
 
 // Process list the lambdas associated to an
 // AWS account and print them
 // TODO refactor and add tests
-func (l LambdaList) Print() error {
+func (l LambdaList) Load() LambdaList {
 	sess, err := session.NewSession()
 	if err != nil {
-		return ErrCannotCreateSession
+		// Something went wrong... Log it.
+		return l
+	}
+
+	client := client.NewLambdaClient(lambda.New(sess))
+	lambdas, err := listFunctions(client.GetClient())
+	if err != nil {
+		l.lambdas = lambdas
+	}
+
+	return l
+}
+
+// Process list the lambdas associated to an
+// AWS account and print them
+// TODO refactor and add tests
+func (l LambdaList) Print() LambdaList {
+	sess, err := session.NewSession()
+	if err != nil {
+		// Something went wrong... Log it.
+		return l
 	}
 
 	client := client.NewLambdaClient(lambda.New(sess))
@@ -60,9 +82,9 @@ func (l LambdaList) Print() error {
 	}
 
 	printLambdas(lambdas)
-	return nil
+	return l
 }
 
-func NewList() LambdaList {
+func NewLambdaList() LambdaList {
 	return LambdaList{}
 }

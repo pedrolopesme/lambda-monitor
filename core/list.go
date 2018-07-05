@@ -3,46 +3,61 @@ package core
 import (
 	"github.com/aws/aws-sdk-go/service/lambda"
 	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/aws/awserr"
-	"fmt"
 	"github.com/aws/aws-sdk-go/service/lambda/lambdaiface"
 	"github.com/pedrolopesme/lambda-monitor/client"
+	"fmt"
 )
 
-func listFunctions(client lambdaiface.LambdaAPI) (lambdas []Lambda, err error){
+// TODO add description and tests
+type lambdaSummary interface {
+	GetName() string
+}
+
+// TODO add description and tests
+func printLambda(lambda lambdaSummary) {
+	fmt.Println(lambda.GetName())
+}
+
+// TODO add description and tests
+func printLambdas(lambdas []Lambda) {
+	if len(lambdas) > 0 {
+		for _, lambda := range lambdas {
+			printLambda(lambda)
+		}
+	}
+}
+
+// TODO add description and tests
+func listFunctions(client lambdaiface.LambdaAPI) (lambdas []Lambda, err error) {
 	input := &lambda.ListFunctionsInput{}
 	result, err := client.ListFunctions(input)
 
 	if err != nil {
-		if aerr, ok := err.(awserr.Error); ok {
-			switch aerr.Code() {
-			case lambda.ErrCodeServiceException:
-				fmt.Println(lambda.ErrCodeServiceException, aerr.Error())
-			case lambda.ErrCodeTooManyRequestsException:
-				fmt.Println(lambda.ErrCodeTooManyRequestsException, aerr.Error())
-			case lambda.ErrCodeInvalidParameterValueException:
-				fmt.Println(lambda.ErrCodeInvalidParameterValueException, aerr.Error())
-			default:
-				fmt.Println(aerr.Error())
-			}
-		} else {
-			// Print the error, cast err to awserr.Error to get the Code and
-			// Message from an error.
-			fmt.Println(err.Error())
-		}
 		return
 	}
 
-	fmt.Println(result)
+	for _, function := range result.Functions {
+		lambdas = append(lambdas, *LambdaBuilder(function))
+	}
 	return
 }
 
-// ListLambdas list the lambdas associated to an
-// AWS account
-// TODO refactor
-func PrintLambdas() (err error) {
+// Process list the lambdas associated to an
+// AWS account and print them
+// TODO refactor and add tests
+func Process() (err error) {
 	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("It was impossible to create AWS session due to", err)
+		return
+	}
+
 	client := client.NewLambdaClient(lambda.New(sess))
-	listFunctions(client.GetClient())
+	lambdas, err := listFunctions(client.GetClient())
+	if err != nil {
+		fmt.Println("It was impossible to retrieve AWS Lambda Functions due to", err)
+	}
+
+	printLambdas(lambdas)
 	return
 }

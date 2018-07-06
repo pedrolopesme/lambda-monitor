@@ -19,15 +19,6 @@ func printLambda(lambda lambdaSummary) {
 }
 
 // TODO add description and tests
-func printLambdas(lambdas []Lambda) {
-	if len(lambdas) > 0 {
-		for _, lambda := range lambdas {
-			printLambda(lambda)
-		}
-	}
-}
-
-// TODO add description and tests
 func listFunctions(client lambdaiface.LambdaAPI) (lambdas []Lambda, err error) {
 	input := &lambda.ListFunctionsInput{}
 	result, err := client.ListFunctions(input)
@@ -39,52 +30,41 @@ func listFunctions(client lambdaiface.LambdaAPI) (lambdas []Lambda, err error) {
 	for _, function := range result.Functions {
 		lambdas = append(lambdas, *LambdaBuilder(function))
 	}
+	fmt.Println(lambdas)
 	return
 }
 
-type LambdaList struct {
-	lambdas []Lambda
-}
 
 // Process list the lambdas associated to an
 // AWS account and print them
 // TODO refactor and add tests
-func (l LambdaList) Load() LambdaList {
+func (lambdas Lambdas) Load() Lambdas {
 	sess, err := session.NewSession()
 	if err != nil {
 		// Something went wrong... Log it.
-		return l
+		return lambdas
 	}
 
-	client := client.NewLambdaClient(lambda.New(sess))
-	lambdas, err := listFunctions(client.GetClient())
+	lambdasClient := client.NewLambdaClient(lambda.New(sess))
+	awsLambdas, err := listFunctions(lambdasClient.Get())
+
 	if err != nil {
-		l.lambdas = lambdas
+		lambdas.Set(awsLambdas)
 	}
-
-	return l
+	return lambdas
 }
 
-// Process list the lambdas associated to an
-// AWS account and print them
+// Print func walks through all lambdas stored
+// at Lambdas type and print them to the standard output
 // TODO refactor and add tests
-func (l LambdaList) Print() LambdaList {
-	sess, err := session.NewSession()
-	if err != nil {
-		// Something went wrong... Log it.
-		return l
+func (lambdas Lambdas) Print() Lambdas {
+	iterator := lambdas.GetIterator()
+	for iterator.Next() {
+		printLambda(iterator.Get())
 	}
-
-	client := client.NewLambdaClient(lambda.New(sess))
-	lambdas, err := listFunctions(client.GetClient())
-	if err != nil {
-		fmt.Println("It was impossible to retrieve AWS Lambda Functions due to", err)
-	}
-
-	printLambdas(lambdas)
-	return l
+	return lambdas
 }
 
-func NewLambdaList() LambdaList {
-	return LambdaList{}
+func NewLambdaList() Lambdas {
+	return Lambdas{}
 }

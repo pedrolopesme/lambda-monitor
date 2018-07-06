@@ -7,7 +7,7 @@ type lambdaClient struct {
 	client lambdaiface.LambdaAPI
 }
 
-func (lc lambdaClient) GetClient() lambdaiface.LambdaAPI {
+func (lc lambdaClient) Get() lambdaiface.LambdaAPI {
 	return lc.client
 }
 

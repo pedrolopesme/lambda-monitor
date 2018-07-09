@@ -8,12 +8,13 @@ import (
 	"fmt"
 )
 
-// TODO add description and tests
+// lambdaSummary contains the basic  interface
+// for a Lambda in order to be printed
 type lambdaSummary interface {
 	GetName() string
 }
 
-// TODO add description and tests
+// printLambda formats and print a lambda
 func printLambda(lambda lambdaSummary) {
 	fmt.Println(lambda.GetName())
 }
@@ -33,7 +34,6 @@ func listFunctions(client lambdaiface.LambdaAPI) (lambdas []Lambda, err error) {
 	fmt.Println(lambdas)
 	return
 }
-
 
 // Process list the lambdas associated to an
 // AWS account and print them
@@ -56,7 +56,7 @@ func (lambdas Lambdas) Load() Lambdas {
 
 // Print func walks through all lambdas stored
 // at Lambdas type and print them to the standard output
-// TODO refactor and add tests
+// TODO refactor and add tests1
 func (lambdas Lambdas) Print() Lambdas {
 	iterator := lambdas.GetIterator()
 	for iterator.Next() {

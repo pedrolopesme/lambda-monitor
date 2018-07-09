@@ -14,8 +14,8 @@ type lambdaSummary interface {
 	GetName() string
 }
 
-// printLambda formats and print a lambda
-func printLambda(lambda lambdaSummary) {
+// printLambdaSummary formats and print a lambda
+func printLambdaSummary(lambda lambdaSummary) {
 	fmt.Println(lambda.GetName())
 }
 
@@ -60,7 +60,7 @@ func (lambdas Lambdas) Load() Lambdas {
 func (lambdas Lambdas) Print() Lambdas {
 	iterator := lambdas.GetIterator()
 	for iterator.Next() {
-		printLambda(iterator.Get())
+		printLambdaSummary(iterator.Get())
 	}
 	return lambdas
 }

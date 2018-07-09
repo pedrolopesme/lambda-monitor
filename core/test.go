@@ -1,9 +1,9 @@
 package core
 
 import (
-	"os"
 	"bytes"
 	"io"
+	"os"
 )
 
 // Captures the output by replacing the

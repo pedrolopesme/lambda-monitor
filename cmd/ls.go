@@ -15,8 +15,8 @@
 package cmd
 
 import (
-	"github.com/spf13/cobra"
 	"github.com/pedrolopesme/lambda-monitor/core"
+	"github.com/spf13/cobra"
 )
 
 // lsCmd represents the ls command

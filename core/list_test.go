@@ -7,7 +7,7 @@ import (
 
 func TestPrintLambda(test *testing.T) {
 	output := captureOutput(func() {
-		printLambda(buildMockedLambda("Dummy"))
+		printLambdaSummary(buildMockedLambda("Dummy"))
 	})
 
 	assert.Equal(test, "Dummy\n", output)

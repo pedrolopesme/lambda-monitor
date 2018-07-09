@@ -1,11 +1,11 @@
 package core
 
 import (
-	"github.com/aws/aws-sdk-go/service/lambda"
+	"fmt"
 	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/lambda"
 	"github.com/aws/aws-sdk-go/service/lambda/lambdaiface"
 	"github.com/pedrolopesme/lambda-monitor/client"
-	"fmt"
 )
 
 // lambdaSummary contains the basic  interface

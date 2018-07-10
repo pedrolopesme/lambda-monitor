@@ -57,13 +57,25 @@ func (lambdas Lambdas) Set(newLambdas []Lambda) {
 	lambdas.lambdas = newLambdas
 }
 
+// Size returns the amount of lambdas found
+// TODO add tests
+func (lambdas Lambdas) Size() int {
+	return len(lambdas.lambdas)
+}
+
+// Size returns the amount of lambdas found
+// TODO add tests
+func (lambdas *Lambdas) Put(lambda Lambda) {
+	lambdas.lambdas = append(lambdas.lambdas, lambda)
+}
+
 // GetIterator retrieves an iterator to the
 // current Lambdass
 // TODO add tests
 func (lambdas Lambdas) GetIterator() *LambdasIterator {
 	return &LambdasIterator{
 		lambdas: lambdas,
-		head:    0,
+		head:    -1,
 	}
 }
 
@@ -77,7 +89,7 @@ type LambdasIterator struct {
 // Next moves the internal head of the iterator to the
 // next position if its possible
 // TODO add tests
-func (iterator LambdasIterator) Next() bool {
+func (iterator *LambdasIterator) Next() bool {
 	if iterator.head < len(iterator.lambdas.Get())-1 {
 		iterator.head++
 		return true
@@ -88,7 +100,7 @@ func (iterator LambdasIterator) Next() bool {
 // Retrieves the lambda stored in the current head position
 // TODO add tests
 func (iterator LambdasIterator) Get() (lambda Lambda) {
-	if iterator.head < len(iterator.lambdas.Get()) {
+	if iterator.head >= 0 && iterator.head < len(iterator.lambdas.Get()) {
 		lambda = iterator.lambdas.Get()[iterator.head]
 	}
 	return

@@ -56,11 +56,14 @@ func (lambdas Lambdas) Load() Lambdas {
 
 // Print func walks through all lambdas stored
 // at Lambdas type and print them to the standard output
-// TODO refactor and add tests1
 func (lambdas Lambdas) Print() Lambdas {
-	iterator := lambdas.GetIterator()
-	for iterator.Next() {
-		printLambdaSummary(iterator.Get())
+	if lambdas.Size() > 0 {
+		iterator := lambdas.GetIterator()
+		for iterator.Next() {
+			printLambdaSummary(iterator.Get())
+		}
+	} else {
+		fmt.Println("No Lambdas Found")
 	}
 	return lambdas
 }
